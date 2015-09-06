@@ -806,7 +806,7 @@ if( !function_exists( 'SULlyLoad' ) )
 		}
 	}
 	
-include_once( 'ToolStack-WP-Utilities.class.php' );
+include_once( dirname( __FILE__ ) . '/ToolStack-WP-Utilities.class.php' );
 
 // Create our global utilities object.  We might be tempted to load the user options now, but that's not possible as WordPress hasn't processed the login this early yet.
 $SULlyUtils = new ToolStack_WP_Utilities_V2_4( 'SULly' );
