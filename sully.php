@@ -626,7 +626,7 @@ if( !function_exists( 'SULlyLoad' ) )
 			
 			$headers[] = "From: $blogname <$blogemail>";
 
-			wp_mail( $blogemail, '[' . $blogname . '] ' . $iteminfo['nicename'] . ' has been installed/updated to version ' . $iteminfo['version'], "Change Log:\r\n\r\n" . $iteminfo['fullchangelog'], $headers );
+			wp_mail( $blogemail, '[' . $blogname . '] ' . $iteminfo['nicename'] . ' has been installed/updated to version ' . $iteminfo['version'], $iteminfo['nicename'] . " Change Log:\r\n\r\n" . $iteminfo['fullchangelog'], $headers );
 			}
 		
 		}
