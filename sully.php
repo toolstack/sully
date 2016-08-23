@@ -162,7 +162,9 @@ if( !function_exists( 'SULlyLoad' ) )
 		$type = '';
 		
 		// Deal with WP core updates, since the download is captured but the upgrade function is never called
-		if( preg_match( '!^(http|https|ftp)://downloads.wordpress.org/release/wordpress-\d+!i', $packagename ) ) // https://downloads.wordpress.org/release/wordpress-3.7.1-partial-0.zip
+		// https://downloads.wordpress.org/release/wordpress-3.7.1-partial-0.zip or
+		// https://downloads.wordpress.org/translation/core/4.6/fr_FR.zip
+		if( preg_match( '!^(http|https|ftp)://downloads.wordpress.org/release/wordpress-\d+!i', $packagename ) || preg_match( '!^(http|https|ftp)://downloads.wordpress.org/translation/core.*!i', $packagename ) ) 
 			{
 			$type = 'C';
 			}
@@ -257,6 +259,7 @@ if( !function_exists( 'SULlyLoad' ) )
 		
 		$itemname = the item name to process
 		$lastdir = the last part of the path from the package name
+		$firstdir = the first directory after the host name
 	*/	
 	function SULlyGetItemInfo( $itemname, $lastdir, $firstdir = null )
 		{	
@@ -500,7 +503,7 @@ if( !function_exists( 'SULlyLoad' ) )
 			$version = $wp_version;
 			}
 			
-		// If we've still gotten all the way down here and haven't determined the type of udpate it is, let's do some more work to see if
+		// If we've still gotten all the way down here and haven't determined the type of update it is, let's do some more work to see if
 		// we can't figure it out.
 		if( $type == 'U' )
 			{
@@ -658,7 +661,7 @@ if( !function_exists( 'SULlyLoad' ) )
 		}
 
 	/*
-		Update SULly entries for any WordPress core updates that are outsanding.
+		Update SULly entries for any WordPress core updates that are outstanding.
 	*/
 	function SULlyUpdateCores()
 		{
@@ -673,15 +676,15 @@ if( !function_exists( 'SULlyLoad' ) )
 			$RowID = $CurRow->id;
 			
 			$itemdetails = SULlyGetItemDetails( $CurRow->filename );
-			
-			$iteminfo = SULlyGetItemInfo( $itemdetails['itemname'], 'wordpress' );
+
+			$iteminfo = SULlyGetItemInfo( $itemdetails['itemname'], $itemdetails['lastdir'], $itemdetails['firstdir'] );
 
 			$wpdb->update( $TableName, array( 'itemname' => $itemdetails['itemname'], 'nicename' => $iteminfo['nicename'], 'itemurl' => $iteminfo['itemurl'], 'version' => $iteminfo['version'], 'type' => $iteminfo['type'], 'changelog' => $iteminfo['changelog'] ), array( 'id' => $RowID ) );
 			}
 		}
 		
 	/*
-		Handle the specail case where we're updating SULly itself.
+		Handle the special case where we're updating SULly itself.
 	*/
 	function SULlyUpdateMyself()
 		{
