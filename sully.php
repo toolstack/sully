@@ -163,8 +163,9 @@ if( !function_exists( 'SULlyLoad' ) )
 		
 		// Deal with WP core updates, since the download is captured but the upgrade function is never called
 		// https://downloads.wordpress.org/release/wordpress-3.7.1-partial-0.zip or
-		// https://downloads.wordpress.org/translation/core/4.6/fr_FR.zip
-		if( preg_match( '!^(http|https|ftp)://downloads.wordpress.org/release/wordpress-\d+!i', $packagename ) || preg_match( '!^(http|https|ftp)://downloads.wordpress.org/translation/core.*!i', $packagename ) ) 
+		// https://downloads.wordpress.org/translation/core/4.6/fr_FR.zip or
+		// https://downloads.wordpress.org/translation/plugin/stops-core-theme-and-plugin-updates/6.2.3/fr_FR.zip
+		if( preg_match( '!^(http|https|ftp)://downloads.wordpress.org/release/wordpress-\d+!i', $packagename ) || preg_match( '!^(http|https|ftp)://downloads.wordpress.org/translation/.*!i', $packagename ) ) 
 			{
 			$type = 'C';
 			}
@@ -261,7 +262,7 @@ if( !function_exists( 'SULlyLoad' ) )
 		$lastdir = the last part of the path from the package name
 		$firstdir = the first directory after the host name
 	*/	
-	function SULlyGetItemInfo( $itemname, $lastdir, $firstdir = null )
+	function SULlyGetItemInfo( $itemname, $lastdir, $firstdir = null, $package = '' )
 		{	
 		GLOBAL $wp_version, $SULlyUtils;
 		
@@ -493,14 +494,46 @@ if( !function_exists( 'SULlyLoad' ) )
 			}
 		else if( $firstdir == 'translation' )
 			{
-			// if the path is something like https://downloads.wordpress.org/translation/core/4.2.2/fr_FR.zip, we're downloading a translation update
-			$type = 'C';
+			// If the path is something like https://downloads.wordpress.org/translation/core/4.2.2/fr_FR.zip, we're downloading a translation update.
+			// Plugins can have translations now as well, like https://downloads.wordpress.org/translation/plugin/stops-core-theme-and-plugin-updates/6.2.3/fr_FR.zip.
 			
-			// Set some variables for later.
-			$nicename = 'WordPress Translation Update';
-			$itemurl = 'http://wordpress.org';
-			$readme = "Sorry, translations don't have a change logs.";
-			$version = $wp_version;
+			$url_path = parse_url( $package, PHP_URL_PATH );
+			
+			$parts = explode( '/', $url_path );
+			
+			echo serialize( $parts );
+			
+			switch( $parts[2] ) 
+				{
+				case 'plugin':
+					echo 'here: plugin';
+					// Set some variables for later.
+					$type = 'P';
+					$nicename = 'WordPress Plugin Translation Update';
+					$itemurl = 'http://wordpress.org/plugins/' . $parts[3];
+					$readme = "Plugin slug: {$parts[3]}\nPlugin Version: {$parts[4]}\nLanguage: {$parts[5]}";
+					$version = $parts[4];
+				
+					break;
+				case 'theme':
+					echo 'here: theme';
+					// Set some variables for later.
+					$type = 'T';
+					$nicename = 'WordPress Theme Translation Update';
+					$itemurl = 'http://wordpress.org/themes/' . $parts[3];
+					$readme = "Theme slug: {$parts[3]}\nTheme Version: {$parts[4]}\nLanguage: {$parts[5]}";
+					$version = $parts[4];
+				
+					break;
+				default:	
+					echo 'here: default';
+					// Set some variables for later.
+					$type = 'C';
+					$nicename = 'WordPress Translation Update';
+					$itemurl = 'http://wordpress.org';
+					$readme = "Sorry, translations don't have a change logs.";
+					$version = $wp_version;
+				}
 			}
 			
 		// If we've still gotten all the way down here and haven't determined the type of update it is, let's do some more work to see if
@@ -526,7 +559,7 @@ if( !function_exists( 'SULlyLoad' ) )
 			if( $found_item )
 				{
 				// if our guess paid off, rerun the function
-				return SULlyGetItemInfo( $itemname, $lastdir, $firstdir );
+				return SULlyGetItemInfo( $itemname, $lastdir, $firstdir, $package );
 				}
 			}
 
@@ -592,7 +625,7 @@ if( !function_exists( 'SULlyLoad' ) )
 				// Get the details, unless we're upgrading ourselves.  
 				if( $result["destination_name"] != 'sully' )
 					{
-					$iteminfo = SULlyGetItemInfo( $itemdetails['itemname'], $itemdetails['lastdir'], $itemdetails['firstdir'] );
+					$iteminfo = SULlyGetItemInfo( $itemdetails['itemname'], $itemdetails['lastdir'], $itemdetails['firstdir'], $package );
 
 					// If there's no version information provided by SULlyGetItemInfo() fall back to what was provided in the item name.
 					if( $iteminfo['version'] == "" ) { $iteminfo['version'] = $itemdetails['version']; }
@@ -677,7 +710,7 @@ if( !function_exists( 'SULlyLoad' ) )
 			
 			$itemdetails = SULlyGetItemDetails( $CurRow->filename );
 
-			$iteminfo = SULlyGetItemInfo( $itemdetails['itemname'], $itemdetails['lastdir'], $itemdetails['firstdir'] );
+			$iteminfo = SULlyGetItemInfo( $itemdetails['itemname'], $itemdetails['lastdir'], $itemdetails['firstdir'], $CurRow->filename );
 
 			$wpdb->update( $TableName, array( 'itemname' => $itemdetails['itemname'], 'nicename' => $iteminfo['nicename'], 'itemurl' => $iteminfo['itemurl'], 'version' => $iteminfo['version'], 'type' => $iteminfo['type'], 'changelog' => $iteminfo['changelog'] ), array( 'id' => $RowID ) );
 			}
