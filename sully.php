@@ -501,12 +501,9 @@ if( !function_exists( 'SULlyLoad' ) )
 			
 			$parts = explode( '/', $url_path );
 			
-			echo serialize( $parts );
-			
 			switch( $parts[2] ) 
 				{
 				case 'plugin':
-					echo 'here: plugin';
 					// Set some variables for later.
 					$type = 'P';
 					$nicename = 'WordPress Plugin Translation Update';
@@ -516,7 +513,6 @@ if( !function_exists( 'SULlyLoad' ) )
 				
 					break;
 				case 'theme':
-					echo 'here: theme';
 					// Set some variables for later.
 					$type = 'T';
 					$nicename = 'WordPress Theme Translation Update';
@@ -526,7 +522,6 @@ if( !function_exists( 'SULlyLoad' ) )
 				
 					break;
 				default:	
-					echo 'here: default';
 					// Set some variables for later.
 					$type = 'C';
 					$nicename = 'WordPress Translation Update';
