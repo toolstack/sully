@@ -12,7 +12,7 @@ System Update Logger - Record system updates including plugins, themes and core 
 
 == Description ==
 
-With WordPress 3.7, updates happen automatically for you, however there is only e-mail notifications sent.  WordPress has a robust administration interface so SULly records all system updates (either automatic or manually done through the admin interface) in to a table and presents the last 10 updates to you in a dashboard widget.
+With WordPress 3.7, updates happen automatically for you, however there is only an e-mail notifications sent.  WordPress has a robust administration interface so SULly records all system updates (either automatic or manually done through the admin interface) in to a table and presents the last 10 updates to you in a dashboard widget.
 
 Also note that this plugin can only display logs for items installed after SULly itself is installed.
 
@@ -28,7 +28,7 @@ This code is released under the GPL v2, see license.txt for details.
 
 = Why doesn't SULly show me update from before I installed it? =
 
-WordPress doesn't record this information anywhere so SULly hooks in to the download and update hooks in WordPress 3.7 to keep track of these changes, but that means it has to be installed before it can record the updates.  
+WordPress doesn't record this information anywhere so SULly hooks in to the download and update hooks in WordPress to keep track of these changes, but that means it has to be installed before it can record the updates.  
 
 = I updated a plugin and the change log in SULly is blank but does have a readme.txt and a change log is there, what's wrong? =
 
@@ -47,6 +47,11 @@ The manual and system change types are only captured the next time someone loads
 3. The admin page.
 
 == Changelog ==
+= 4.2 =
+* Release date: September 1, 2016
+* Fixed translation updates being identified as unknown.
+* Fixed plugin and theme translation updates being identified as core updates.
+
 = 4.1 =
 * Release date: October 2, 2015
 * Added translation domain.

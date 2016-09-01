@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: SULly
-Version: 4.1
+Version: 4.2
 Plugin URI: http://toolstack.com/sully
 Author: Greg Ross
 Author URI: http://toolstack.com
@@ -13,12 +13,12 @@ Compatible with WordPress 3.7+.
 
 Read the accompanying readme.txt file for instructions and documentation.
 
-Copyright (c) 2013-15 by Greg Ross
+Copyright (c) 2013-16 by Greg Ross
 
 This software is released under the GPL v2.0, see license.txt for details
 */
 
-$SULlyVersion = '4.1';
+$SULlyVersion = '4.2';
 
 if( !function_exists( 'SULlyLoad' ) )
 	{
