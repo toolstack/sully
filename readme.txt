@@ -47,6 +47,10 @@ The manual and system change types are only captured the next time someone loads
 3. The admin page.
 
 == Changelog ==
+= 4.2.1 =
+* Release date: August 17, 2020
+* Fixed warnings with PHP 7.4.
+
 = 4.2 =
 * Release date: September 1, 2016
 * Fixed translation updates being identified as unknown.
