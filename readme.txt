@@ -5,7 +5,7 @@ Author URI: http://toolstack.com
 Tags: admin updates log
 Requires at least: 3.7.0
 Tested up to: 5.4
-Stable tag: 4.2
+Stable tag: 4.2.1
 License: GPLv2
 
 System Update Logger - Record system updates including plugins, themes and core updates.

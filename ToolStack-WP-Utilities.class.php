@@ -2,7 +2,7 @@
 /*
 	This is the ToolStack.com WordPress Utilities class.
 	
-	Copyright (C) 2015 Greg Ross <greg@toolstack.com>
+	Copyright (C) 2015-2018 Greg Ross <greg@toolstack.com>
 	    All rights reserved.
 	    This is free software with ABSOLUTELY NO WARRANTY.
 	
@@ -10,8 +10,8 @@
 	GPL2, GNU General Public License version 2.
 	
 */
-if( !class_exists( 'ToolStack_WP_Utilities_V2_5' ) ) {
-	class ToolStack_WP_Utilities_V2_5
+if( !class_exists( 'ToolStack_WP_Utilities_V2_7' ) ) {
+	class ToolStack_WP_Utilities_V2_7
 		{
 		private $plugin_slug = '';
 		private $user_id = 0;
@@ -101,25 +101,26 @@ if( !class_exists( 'ToolStack_WP_Utilities_V2_5' ) ) {
 
 			// Not sure why, but get_user_meta() is returning an array or array's unless $single is set to true.
 			$this->user_options[$this->user_id] = get_user_meta( $this->user_id, $this->plugin_slug, true );
+
+			// Let's make sure we have an array, just in case there's something wrong with the user meta data.
+			// If an array doesn't exist, reset it to an empty one.
+			if( ! is_array( $this->user_options[$this->user_id] ) ) { $this->user_options[$this->user_id] = array(); }
 			}
 		
 		// The function mimics WordPress's get_option() function but uses the array instead of individual options.
 		public function get_option( $option, $default = null ) 
 			{
+			if( ! isset( $default ) ) 
+				{
+				$default = FALSE;
+				}
 			// If no options array exists, return FALSE.
-			if( !is_array($this->options) ) { return FALSE; }
+			if( ! is_array( $this->options ) ) { return $default; }
 		
 			// if the option isn't set yet, return the $default if it exists, otherwise FALSE.
 			if( !array_key_exists( $option, $this->options ) ) 
 				{
-				if( isset( $default ) ) 
-					{
-					return $default;
-					} 
-				else 
-					{
-					return FALSE;
-					}
+				return $default;
 				}
 			
 			// Return the option.
@@ -174,7 +175,7 @@ if( !class_exists( 'ToolStack_WP_Utilities_V2_5' ) ) {
 		public function get_user_option( $option, $default = FALSE ) 
 			{
 			// If the user id has not been set or no options array exists, return the default.
-			if( $this->user_id == 0 ) {return $default; }
+			if( $this->user_id == 0 ) { return $default; }
 			if( !is_array($this->user_options[$this->user_id]) ) { return $default; }
 			
 			// if the option isn't set yet, return the $default if it exists, otherwise FALSE.
@@ -306,7 +307,7 @@ if( !class_exists( 'ToolStack_WP_Utilities_V2_5' ) ) {
 						break;
 					case 'desc':
 						// Check to make sure we have everything we need.
-						if( !array_key_exists( 'desc', $option ) ) { continue; }
+						if( !array_key_exists( 'desc', $option ) ) { continue 2; }
 						
 						$ret .= "					<tr><td></td><td><span class=\"description\">" . $option['desc'] . "</span></td></tr>\r\n";
 						
@@ -314,7 +315,7 @@ if( !class_exists( 'ToolStack_WP_Utilities_V2_5' ) ) {
 					case 'bool':
 						// Check to make sure we have everything we need.
 						if( !array_key_exists( 'setting', $option ) ) { $option['setting'] = 0; }
-						if( !array_key_exists( 'desc', $option ) ) { continue; }
+						if( !array_key_exists( 'desc', $option ) ) { continue 2; }
 						
 						if( $option['setting'] == 1 ) { $checked = " CHECKED"; } else { $checked = ""; } 
 						$ret .= "					<tr><td style=\"text-align: right;\">" . $option['desc'] . ":</td><td><input name=\"$name\" value=\"1\" type=\"checkbox\" id=\"$name\"" . $checked. "></td></tr>\r\n";
@@ -323,7 +324,7 @@ if( !class_exists( 'ToolStack_WP_Utilities_V2_5' ) ) {
 					case 'image':
 						// Check to make sure we have everything we need.
 						if( !array_key_exists( 'setting', $option ) ) { $option['setting'] = ''; }
-						if( !array_key_exists( 'desc', $option ) ) { continue; }
+						if( !array_key_exists( 'desc', $option ) ) { continue 2; }
 
 						$ret .= "					<tr><td style=\"text-align: right;\">" . $option['desc'] . ":</td><td><input name=\"$name\" type=\"text\" size=\"40\" id=\"$name\" value=\"" . $option['setting'] . "\"></td></tr>\r\n";
 					
@@ -337,8 +338,8 @@ if( !class_exists( 'ToolStack_WP_Utilities_V2_5' ) ) {
 						break;
 					case 'select':
 						// Check to make sure we have everything we need.
-						if( !array_key_exists( 'option_list', $option ) ) { continue; }
-						if( !array_key_exists( 'desc', $option ) ) { continue; }
+						if( !array_key_exists( 'option_list', $option ) ) { continue 2; }
+						if( !array_key_exists( 'desc', $option ) ) { continue 2; }
 
 						$ret .= "					<tr><td style=\"text-align: right;\">" . $option['desc'] . ":</td><td><select name=\"$name\" id=\"$name\">" . $option['option_list']. "</select></td></tr>\r\n";
 
@@ -346,7 +347,7 @@ if( !class_exists( 'ToolStack_WP_Utilities_V2_5' ) ) {
 					case 'static':
 						// Check to make sure we have everything we need.
 						if( !array_key_exists( 'setting', $option ) ) { $option['setting'] = ''; }
-						if( !array_key_exists( 'desc', $option ) ) { continue; }
+						if( !array_key_exists( 'desc', $option ) ) { continue 2; }
 
 						$ret .= "					<tr><td style=\"text-align: right;\">" . $option['desc'] . ":</td><td>" . $option['setting']. "</td></tr>\r\n";
 
@@ -357,7 +358,7 @@ if( !class_exists( 'ToolStack_WP_Utilities_V2_5' ) ) {
 						if( !array_key_exists( 'size', $option ) ) { $option['size'] = ''; }
 						if( !array_key_exists( 'setting', $option ) ) { $option['setting'] = ''; }
 						if( !array_key_exists( 'post', $option ) ) { $option['post'] = ''; }
-						if( !array_key_exists( 'desc', $option ) ) { continue; }
+						if( !array_key_exists( 'desc', $option ) ) { continue 2; }
 
 						if( $option['height'] <= 1 ) 
 							{

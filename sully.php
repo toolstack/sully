@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: SULly
-Version: 4.2
+Version: 4.2.1
 Plugin URI: http://toolstack.com/sully
 Author: Greg Ross
 Author URI: http://toolstack.com
@@ -13,12 +13,12 @@ Compatible with WordPress 3.7+.
 
 Read the accompanying readme.txt file for instructions and documentation.
 
-Copyright (c) 2013-16 by Greg Ross
+Copyright (c) 2013-2020 by Greg Ross
 
 This software is released under the GPL v2.0, see license.txt for details
 */
 
-$SULlyVersion = '4.2';
+$SULlyVersion = '4.2.1';
 
 if( !function_exists( 'SULlyLoad' ) )
 	{
@@ -843,7 +843,7 @@ if( !function_exists( 'SULlyLoad' ) )
 include_once( dirname( __FILE__ ) . '/ToolStack-WP-Utilities.class.php' );
 
 // Create our global utilities object.  We might be tempted to load the user options now, but that's not possible as WordPress hasn't processed the login this early yet.
-$SULlyUtils = new ToolStack_WP_Utilities_V2_5( 'SULly', __FILE__ );
+$SULlyUtils = new ToolStack_WP_Utilities_V2_7( 'SULly', __FILE__ );
 
 // If the current database version is not the same as the one stored in the options, install or upgrade the database and settings.
 if( get_option( 'SULly_DBVersion' ) != $SULlyVersion ) { add_action( 'init', 'SULlySetup', 10 ); }
