@@ -4,8 +4,8 @@
 **Author URI:** http://toolstack.com  
 **Tags:** admin updates log  
 **Requires at least:** 3.7.0  
-**Tested up to:** 6.1.1  
-**Stable tag:** 4.2.1  
+**Tested up to:** 6.5.3  
+**Stable tag:** 4.3  
 **License:** GPLv2  
 
 System Update Logger - Record system updates including plugins, themes and core updates.
@@ -28,7 +28,7 @@ This code is released under the GPL v2, see license.txt for details.
 
 ### Why doesn't SULly show me update from before I installed it? ###
 
-WordPress doesn't record this information anywhere so SULly hooks in to the download and update hooks in WordPress to keep track of these changes, but that means it has to be installed before it can record the updates.  
+WordPress doesn't record this information anywhere so SULly hooks in to the download and update hooks in WordPress to keep track of these changes, but that means it has to be installed before it can record the updates.
 
 ### I updated a plugin and the change log in SULly is blank but does have a readme.txt and a change log is there, what's wrong? ###
 
@@ -38,7 +38,7 @@ The code in SULly should catch most change logs but if you find one that doesn't
 
 ### The manual and system change log entries have a date that's different from when I made the change, why? ###
 
-The manual and system change types are only captured the next time someone loads the admin interface, so they may have different time's on them than you expect.  
+The manual and system change types are only captured the next time someone loads the admin interface, so they may have different time's on them than you expect.
 
 ## Screenshots ##
 
@@ -53,6 +53,13 @@ The manual and system change types are only captured the next time someone loads
 
 
 ## Changelog ##
+### 4.3 ###
+* Release date: May 21, 2024
+* Added nonce checking for form submissions.
+* Added data sanatization.
+* Fixed missing translations.
+* Fixed miscellaneous unset variable warnings.
+
 ### 4.2.1 ###
 * Release date: August 17, 2020
 * Fixed warnings with PHP 7.4.
@@ -196,4 +203,3 @@ The manual and system change types are only captured the next time someone loads
 ## Roadmap ##
 
 * None at this time!
-
