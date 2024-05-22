@@ -5,7 +5,7 @@
 **Tags:** admin updates log  
 **Requires at least:** 3.7.0  
 **Tested up to:** 6.5.3  
-**Stable tag:** 4.3  
+**Stable tag:** 4.3.1  
 **License:** GPLv2  
 
 System Update Logger - Record system updates including plugins, themes and core updates.
@@ -53,6 +53,10 @@ The manual and system change types are only captured the next time someone loads
 
 
 ## Changelog ##
+### 4.3.1 ###
+* Release date: May 21, 2024
+* No changes other than fixing release version in plugin file.
+
 ### 4.3 ###
 * Release date: May 21, 2024
 * Added nonce checking for form submissions.
