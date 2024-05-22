@@ -4,21 +4,42 @@
 		$TableName = $wpdb->prefix . "SULly";
 
 		// If the user has selected an item to delete, delete it from the database.
-		if( array_key_exists('SULlyDeleteItem', $_GET) )
+		if( array_key_exists('SULlyDeleteItem', $_GET) && array_key_exists( '_wpnonce', $_GET ) && wp_verify_nonce( $_GET['_wpnonce'], 'delete_row' ) )
 			{
-			$wpdb->delete( $TableName, array( 'id' => $_GET['SULlyDeleteItem'] ) );
+			$wpdb->delete( $TableName, array( 'id' => intval( $_GET['SULlyDeleteItem'] ) ) );
 			}
 
 		// If the user has added a manual entry, add it to the database.
-		if( array_key_exists('manualadd', $_GET) )
+		if( array_key_exists('manualadd', $_GET) && array_key_exists( '_wpnonce', $_POST ) && wp_verify_nonce( $_POST['_wpnonce'], 'add_manual_entry' ) )
 			{
-			if( $_POST['SULlyMAItem'] == "" )
+			if( array_key_exists( 'SULlyMAItem', $_POST ) && $_POST['SULlyMAItem'] == "" )
 				{
 				echo "<div class='updated settings-error'><p><strong>" . __('No item type defined!', 'sully') . "</strong></p></div>\n";
 				}
 			else
 				{
-				$wpdb->insert( $TableName, array( 'type' => $_POST['SULlyMAType'], 'version' => $_POST['SULlyMAVersion'], 'changelog' => $_POST['SULlyMAChangeLog'], 'itemname' => $_POST['SULlyMAItem'], 'nicename' => $_POST['SULlyMAItem'], 'filename' => 'Manual', 'itemurl' => 'Manual' ) );
+				switch( $_POST['SULlyMAType'] ) {
+					case 'C':
+						$AddType = 'C';
+						break;
+					case 'T':
+						$AddType = 'T';
+						break;
+					case 'P':
+						$AddType = 'P';
+						break;
+					case 'S':
+						$AddType = 'S';
+						break;
+					default:
+						$AddType = 'U';
+				}
+
+				$AddVersion = sanitize_text_field( $_POST['SULlyMAVersion'] );
+				$AddItem = sanitize_text_field( $_POST['SULlyMAItem'] );
+				$AddChangeLog = sanitize_textarea_field( wp_kses_post( $_POST['SULlyMAChangeLog'] ) );
+
+				$wpdb->insert( $TableName, array( 'type' => $AddType, 'version' => $AddVersion, 'changelog' => $AddChangeLog, 'itemname' => $AddItem, 'nicename' => $AddItem, 'filename' => 'Manual', 'itemurl' => 'Manual' ) );
 
 				echo "<div class='updated settings-error'><p><strong>" . __('Manual item added!', 'sully') . "</strong></p></div>\n";
 				}
@@ -41,7 +62,7 @@
 
 		// Set the current page we're on.
 		$curpage = 1;
-		if( isset( $_GET["pagenum"] ) ) { $curpage = $_GET["pagenum"]; }
+		if( isset( $_GET["pagenum"] ) ) { $curpage = intval( $_GET["pagenum"] ); }
 		if( $curpage < 1 ) { $curpage = 1; }
 
 		// Determine the first entry we're going to display.
@@ -56,6 +77,7 @@
 		echo "<h2>SULly - " . __('System Update Logger', 'sully') . "</h2><br>\r\n";
 
 		echo '<form action="index.php?page=SULlyDashboard&pagenum=' . $curpage . '&manualadd=1" method="post">' . "\r\n";
+		wp_nonce_field('add_manual_entry');
 		echo '<table class="wp-list-table widefat fixed"><thead><tr><th>' . __( 'Manual Entry', 'sully' ) . '</th><th>Type</th><th>' . __( 'Item', 'sully' ) . '</th><th>' . __( 'Version', 'sully' ) . '</th><th width="30%">' . __( 'Change Log', 'sully' ) . '</th><th>' . __( 'Options', 'sully' ) . '</th></tr></thead>' . "\r\n";
 		echo '<tr>' . "\r\n";
 		echo '<td>&nbsp;</td>' . "\r\n";
@@ -90,21 +112,21 @@
 			if( $CurRow->type == 'S' ) { $TypeDesc = __('System', 'sully'); }
 
 			echo '<td valign="top">' . $TypeDesc . "</td>\r\n";
-			echo '<td valign="top"><a href="' . $CurRow->itemurl . '" target="_blank">' . $CurRow->nicename . '</a></td>' . "\r\n";
-			echo '<td valign="top">' . $CurRow->version . '</td>' . "\r\n";
+			echo '<td valign="top"><a href="' . esc_attr( $CurRow->itemurl ). '" target="_blank">' .  wp_kses_post( $CurRow->nicename ) . '</a></td>' . "\r\n";
+			echo '<td valign="top">' . wp_kses_post( $CurRow->version ). '</td>' . "\r\n";
 			if( $CurRow->type != '' )
 				{
-				echo '<td valign="top" width="50%">' . preg_replace( '/\n/', '<br>', $CurRow->changelog ). '</td>' . "\r\n";
+				echo '<td valign="top" width="50%">' . preg_replace( '/\n/', '<br>', wp_kses_post( $CurRow->changelog ) ). '</td>' . "\r\n";
 				}
 			else
 				{
-				echo '<td valign="top" width="50%">' . $CurRow->filename . '</td>' . "\r\n";
+				echo '<td valign="top" width="50%">' . wp_kses_post( $CurRow->filename ) . '</td>' . "\r\n";
 				}
 
 
-			$alertbox = 'if( confirm(\'' . __('Really delete this item?', 'sully') . '\') ) { window.location = \'index.php?page=SULlyDashboard&SULlyDeleteItem=' . $CurRow->id . '\'; }';
+			$alertbox = 'if( confirm(\'' . __('Really delete this item?', 'sully') . '\') ) { window.location = \'' . wp_nonce_url( 'index.php?page=SULlyDashboard&SULlyDeleteItem=' . intval( $CurRow->id ), 'delete_row' ) . '\'; }';
 
-			echo '<td><a class=button-primary href="#" onclick="' . $alertbox . '">delete</a></td>' . "\r\n";
+			echo '<td><a class=button-primary href="#" onclick="' . $alertbox . '">' . __('delete', 'sully' ) . '</a></td>' . "\r\n";
 
 			echo '</tr>' . "\r\n";
 			}
