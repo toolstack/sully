@@ -349,6 +349,7 @@ if( !function_exists( 'SULlyLoad' ) )
 				$readme = preg_replace( "/^\s*\*\*/s", "=", $readme ); 							// Some people use ** instead of = for their version log.
 				$readme = preg_replace( "/\=.*.\=/", "", $readme, 1 );						// Remove the first single equal enclosed lines, aka version number.
 				$readme = preg_replace( "/\=.*/s", "", $readme );							// Remove everything from the next equal sign to the end of file.
+				$readme = preg_replace( "/\n\n/", "\n", $readme );                          // Remove duplicate blank lines.
 				$readme = trim( $readme );													// Trim the result to make it look nice.
 
 				$fullreadme = $readme;
