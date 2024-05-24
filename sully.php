@@ -369,7 +369,7 @@ if( !function_exists( 'SULlyLoad' ) )
 					{
 					$readme = substr( $readme, 0, 512 );
 
-					$readme .= "\n\nChange log truncated, visit the plugin site for more details.";
+					$readme .= "\n\nChange log truncated, visit the [plugin site](https://wordpress.org/plugins/" . $itemname ."/#developers) for more details.";
 					}
 
 				// Escape any html entities that are in the changelog.
