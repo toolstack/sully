@@ -339,11 +339,21 @@ if( !function_exists( 'SULlyLoad' ) )
 				$itemurl = "http://wordpress.org/plugins/" . $itemname;
 				}
 
-			// If a readme.txt file exists, process the changelog
-			if( file_exists( WP_CONTENT_DIR . '/plugins/' . $itemname . '/readme.txt' ) )
-				{
-				$readme = file_get_contents( WP_CONTENT_DIR . '/plugins/' . $itemname . '/readme.txt' );
+			// Look for a readme.txt.
+			$readme_path = WP_CONTENT_DIR . '/plugins/' . $itemname . '/';
+			$readme_files = array( 'readme.txt', 'Readme.txt', 'README.txt', 'README.TXT');
+			$readme = '';
 
+			$i = 0;
+			while( $readme == '' ) {
+				if( file_exists( $readme_path . $readme_files[$i] ) ) {
+					$readme = file_get_contents( $readme_path . $readme_files[$i] );
+				}
+				$i++;
+			}
+
+			if( $readme != '' )
+				{
 				$readme = preg_replace( "/.*\=\=.?change.?log.?\=\=/is", "", $readme );		// Remove everything above the changelog line.
 				$readme = preg_replace( "/^\s*\=\=.*/s", "", $readme );							// Remove any line that starts with a double =, like a title of some kind.
 				$readme = preg_replace( "/^\s*\*\*/s", "=", $readme ); 							// Some people use ** instead of = for their version log.
