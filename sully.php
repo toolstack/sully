@@ -35,7 +35,7 @@ if( !function_exists( 'SULlyLoad' ) )
 		}
 
 	/*
-		This function will add porper <a> links to URL's found in a string of text.
+		This function will add proper <a> links to URL's found in a string of text.
 
 		This function deserves credit to the fine folks at phpbb.com
 
