@@ -5,7 +5,7 @@
 **Tags:** admin updates log  
 **Requires at least:** 3.7.0  
 **Tested up to:** 6.5.3  
-**Stable tag:** 4.3.1  
+**Stable tag:** 4.4  
 **License:** GPLv2  
 
 System Update Logger - Record system updates including plugins, themes and core updates.
@@ -53,6 +53,13 @@ The manual and system change types are only captured the next time someone loads
 
 
 ## Changelog ##
+### 4.4 ###
+* Release date: June 1, 2024
+* Update regex's to better parse changelogs
+* Remove duplicate blank lines from changelogs
+* Support readme files that have mixed case
+* Make the truncated log message link back to the plugin page on wp.org
+
 ### 4.3.1 ###
 * Release date: May 21, 2024
 * No changes other than fixing release version in plugin file.
